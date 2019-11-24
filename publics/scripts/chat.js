@@ -5,7 +5,7 @@ $(function(){
 	socket.on("connect",function(){
 		let name;
 		$("#btn").click(function(){
-			if($("#name").val()){
+			if(($("#name").val()).match(/[\d\w]+[\S]+/)){
 				name = $("#name").val();
 				socket.emit("client-register-request",name);
 			}
@@ -41,7 +41,7 @@ $(function(){
 
 		socket.on("server-send-message-all",function(data,name){
 			let msg = `<div class = "ms">${name}: ${data}</div>`;
-			$("#message").append(msg);
+			$("#message").append(msg).scrollTop($("#message").outerHeight());
 		});
 		socket.on("server-register-failed",function(){
 			alert("that bai do trung ten");
@@ -58,6 +58,8 @@ $(function(){
 			data.splice(data.findIndex(elm => elm.username === name),1);
 			$("#list").html("");
 			$("#list").append(data.map(elm => `<div class = 'user' data-id = '${elm.id}'>${elm.username}</div>`));
+		});
+		socket.on("server-update-typing",function(data){
 			let typing = data.filter(elm => elm.isTyping).map(elm => `<div class ="typing">${elm.username} is typing<div>`);
 			$("#istyping").html("");
 			$("#istyping").append(typing);

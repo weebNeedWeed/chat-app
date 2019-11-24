@@ -34,14 +34,14 @@ module.exports = function(io){
 				if(elm.username === name) elm.isTyping = true;
 				return elm;
 			});
-			socket.broadcast.emit("server-update-list",db);
+			socket.broadcast.emit("server-update-typing",db);
 		});
 		socket.on("client-stop-focusing",function(name){
 			db = db.map(elm => {
 				if(elm.username === name) elm.isTyping = false;
 				return elm;
 			});
-			socket.broadcast.emit("server-update-list",db);
+			socket.broadcast.emit("server-update-typing",db);
 		});
 		socket.on("disconnect",function(){
 			let index = db.findIndex(elm => elm.id ===socket.id);
