@@ -5,7 +5,7 @@ $(function(){
 	socket.on("connect",function(){
 		let name;
 		$("#btn").click(function(){
-			if(($("#name").val()).match(/[\d\w]+[\S]+/)){
+			if(($("#name").val()).match(/[\d\w\S]+/)){
 				name = $("#name").val();
 				socket.emit("client-register-request",name);
 			}
