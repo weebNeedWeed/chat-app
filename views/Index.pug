@@ -1,2 +1,28 @@
-script(src = "/socket.io/socket.io.js")
-script(src = "/publics/scripts/chat.js")
+html
+  head
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    script(src='/socket.io/socket.io.js')
+    script(src='/publics/scripts/jquery.min.js')
+    script(src='/publics/scripts/chat.js')
+    link(rel='stylesheet', href='/publics/css/body.css')
+  body
+    .container
+      #register
+        h3 Nhap Ten
+        input#name(type='text')
+        input#btn(type='button', value='nhap ten')
+      #chatForm
+        #a
+          #listuser
+            h4#title user online
+            #list
+        #b
+          #welcome
+            | hello 
+            span#usname(style='border:none;') lmao
+            button#logout logout
+          #message
+          #typing
+            #istyping
+            input#msgtxt(type='text')
+            button#send gui

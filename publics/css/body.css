@@ -1,0 +1,60 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing:content-box;
+}
+#register{
+	background-color: #9df2e0;
+	border: none;
+	width:270px;
+}
+#name{
+	background-color: transparent;
+	border: 1px solid black;
+	margin-left:10px;
+	padding:5px;
+}
+#btn{
+	padding:5px;
+}
+#a{
+	float:left;
+	width:30%;
+	height:300px;
+
+}
+#b{
+	float: right;
+	width:70%;
+}
+#title{
+	border: 1px solid black;
+	width:50%;
+	padding:5px;
+	padding-left:20%;
+}
+#list{
+	height:300px;
+	width:70%;
+	border:1px solid black;
+	overflow: scroll;
+}
+#message{
+	height: 300px;
+	width: 100%;
+	border: 1px solid black;
+	word-break: break-all;
+}
+.user{
+	margin-left:1%;
+	font-size:20px;
+}
+#istyping{
+	padding:5px;
+	overflow:scroll;
+	width: 80%;
+	height: 50px;
+}
+#list,#message{
+	overflow-y: scroll;
+}
