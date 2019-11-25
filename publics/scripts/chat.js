@@ -23,11 +23,34 @@ $(function(){
 				else alert("ban hien khong the logout");
 			});
 		});
+		let click = false;
+		let one = "";
+		let privateChat = function(){
+			$(".user").click(function(){
+				if(!click && one === ""){
+					$(this).css("color","red");
+					one = $(this).data("id");
+					click = true;
+				}else if(click && one !== $(this).data("id")){
+					$("#list").find(`[data-id='${$(this).data("id")}']`).css("color","red");
+					$("#list").find(`[data-id='${one}']`).css("color","black");
+					one = $(this).data("id");
+				}else if(click && one == $(this).data("id")){
+					$("#list").find(`[data-id='${$(this).data("id")}']`).css("color","black");
+					one = "";
+					click = false;
+				}
+			});
+		};
 
 		$("#send").click(function(){
 			let msg = $("#msgtxt").val();
 			if(msg){
-				socket.emit("client-send-message-all",msg,name);
+				if(!click){
+					socket.emit("client-send-message",msg,name);
+				}else{
+					socket.emit("client-send-message-to",name,one,msg);
+				}
 			}else alert("vui long nhap tin nhan");
 			$("#msgtxt").val("");
 		});
@@ -53,16 +76,22 @@ $(function(){
 			$("#usname").html(name);
 			$("#chatForm").show(2000);
 			$("#register").hide(1000);
+			privateChat();
 		});
 		socket.on("server-update-list",function(data){
 			data.splice(data.findIndex(elm => elm.username === name),1);
 			$("#list").html("");
 			$("#list").append(data.map(elm => `<div class = 'user' data-id = '${elm.id}'>${elm.username}</div>`));
+			privateChat();
 		});
 		socket.on("server-update-typing",function(data){
 			let typing = data.filter(elm => elm.isTyping).map(elm => `<div class ="typing">${elm.username} is typing<div>`);
 			$("#istyping").html("");
 			$("#istyping").append(typing);
+		});
+		socket.on("server-send-message-to",function(name,data){
+			let msg = `<div class = "ms">${name} -> you : ${data}</div>`;
+			$("#message").append(msg).scrollTop($("#message").outerHeight());
 		});
 	});
 

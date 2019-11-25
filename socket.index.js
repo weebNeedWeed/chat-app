@@ -26,8 +26,11 @@ module.exports = function(io){
 			db.splice(index,1);
 			socket.broadcast.emit("server-update-list",db);
 		});
-		socket.on("client-send-message-all",function(data,name){
+		socket.on("client-send-message",function(data,name){
 			io.emit("server-send-message-all",data,name);
+		});
+		socket.on("client-send-message-to",function(name,toone,msg){
+			socket.broadcast.to(toone).emit("server-send-message-to",name,msg);
 		});
 		socket.on("client-focusing",function(name){
 			db = db.map(elm => {
