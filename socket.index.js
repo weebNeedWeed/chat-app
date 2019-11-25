@@ -1,5 +1,5 @@
 let db = require("./db");
-
+let istyping = require("./db.typing");
 module.exports = function(io){
 	io.on("connection",function(socket){
 		console.log(socket.id,"vua ket noi");
@@ -10,7 +10,6 @@ module.exports = function(io){
 				let o = {};
 				o.username = data;
 				o.id = socket.id;
-				o.isTyping = false;
 				db.push(o);
 				socket.broadcast.emit("server-update-list",db);
 				socket.emit("server-register-success",db);
@@ -33,18 +32,12 @@ module.exports = function(io){
 			socket.broadcast.to(toone).emit("server-send-message-to",name,msg);
 		});
 		socket.on("client-focusing",function(name){
-			db = db.map(elm => {
-				if(elm.username === name) elm.isTyping = true;
-				return elm;
-			});
-			socket.broadcast.emit("server-update-typing",db);
+			istyping.push(name);
+			socket.broadcast.emit("server-update-typing",istyping);
 		});
 		socket.on("client-stop-focusing",function(name){
-			db = db.map(elm => {
-				if(elm.username === name) elm.isTyping = false;
-				return elm;
-			});
-			socket.broadcast.emit("server-update-typing",db);
+			istyping.splice(istyping.findIndex(elm => elm === name),1);
+			socket.broadcast.emit("server-update-typing",istyping);
 		});
 		socket.on("disconnect",function(){
 			let index = db.findIndex(elm => elm.id ===socket.id);

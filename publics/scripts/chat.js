@@ -50,6 +50,9 @@ $(function(){
 					socket.emit("client-send-message",msg,name);
 				}else{
 					socket.emit("client-send-message-to",name,one,msg);
+					let to =  $("#list").find(`[data-id='${one}']`).text();
+					let mes = `<div class = "ms">you -> ${to}: ${msg}</div>`;
+					$("#message").append(mes).scrollTop($("#message").outerHeight());
 				}
 			}else alert("vui long nhap tin nhan");
 			$("#msgtxt").val("");
@@ -79,13 +82,17 @@ $(function(){
 			privateChat();
 		});
 		socket.on("server-update-list",function(data){
+			if(data.findIndex(elm => elm.id === one) === -1){
+				click = false;
+				one = "";
+			} 
 			data.splice(data.findIndex(elm => elm.username === name),1);
 			$("#list").html("");
 			$("#list").append(data.map(elm => `<div class = 'user' data-id = '${elm.id}'>${elm.username}</div>`));
 			privateChat();
 		});
 		socket.on("server-update-typing",function(data){
-			let typing = data.filter(elm => elm.isTyping).map(elm => `<div class ="typing">${elm.username} is typing<div>`);
+			let typing = data.map(elm => `<div class ="typing">${elm} is typing<div>`);
 			$("#istyping").html("");
 			$("#istyping").append(typing);
 		});
