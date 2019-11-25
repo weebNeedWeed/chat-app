@@ -47,6 +47,7 @@ module.exports = function(io){
 			let index = db.findIndex(elm => elm.id ===socket.id);
 			db.splice(index,1);
 			socket.broadcast.emit("server-update-list",db);
+			socket.broadcast.emit("server-update-typing",db);
 		});
 	});
 };
