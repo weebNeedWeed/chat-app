@@ -13,17 +13,20 @@ module.exports = function(io){
 				db.push(o);
 				socket.broadcast.emit("server-update-list",db);
 				socket.emit("server-register-success",db);
+				socket.emit("server-update-typing",istyping);
 			}
 		});
-
 		socket.on("client-is-registered",function(callback){
 			let rs = db.findIndex(elm => elm.id ===socket.id) > -1;
 			callback(rs);
 		});
 		socket.on("client-logout",function(){
 			let index = db.findIndex(elm => elm.id ===socket.id);
+			let name = db[index].username;
 			db.splice(index,1);
 			socket.broadcast.emit("server-update-list",db);
+			istyping.splice(istyping.findIndex(elm => elm === name),1);
+			socket.broadcast.emit("server-update-typing",istyping);
 		});
 		socket.on("client-send-message",function(data,name){
 			io.emit("server-send-message-all",data,name);
@@ -41,8 +44,10 @@ module.exports = function(io){
 		});
 		socket.on("disconnect",function(){
 			let index = db.findIndex(elm => elm.id ===socket.id);
+			let name = db[index].username;
 			db.splice(index,1);
 			socket.broadcast.emit("server-update-list",db);
+			istyping.splice(istyping.findIndex(elm => elm === name),1);
 			socket.broadcast.emit("server-update-typing",istyping);
 		});
 	});
